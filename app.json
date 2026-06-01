@@ -1,22 +1,32 @@
 {
   "expo": {
-    "name": "Mobile_GS",
-    "slug": "Mobile_GS",
+    "name": "OrbitaAlerta",
+    "slug": "orbita-alerta",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "mobilegs",
+    "scheme": "orbitaalerta",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "OrbitaAlerta usa sua localização para orientar brigadistas até o foco de calor.",
+        "NSCameraUsageDescription": "OrbitaAlerta precisa da câmera para registrar evidências fotográficas em campo.",
+        "NSPhotoLibraryUsageDescription": "OrbitaAlerta pode salvar evidências na galeria."
+      }
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
+        "backgroundColor": "#0B1D3A",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION",
+        "CAMERA"
+      ],
       "predictiveBackGestureEnabled": false
     },
     "web": {
@@ -31,7 +41,19 @@
         {
           "image": "./assets/images/splash-icon.png",
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
+          "backgroundColor": "#0B1D3A"
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Permitir que o OrbitaAlerta use sua localização em operações de campo."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "cameraPermission": "Permitir que o OrbitaAlerta use a câmera para evidências em campo."
         }
       ]
     ],
