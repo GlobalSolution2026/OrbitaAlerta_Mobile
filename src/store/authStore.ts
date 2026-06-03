@@ -3,6 +3,7 @@ import { create } from 'zustand';
 import { authService } from '@/src/services/authService';
 import { STORAGE_KEYS } from '@/src/storage/keys';
 import type { AuthSession, AuthUser } from '@/src/types/auth';
+import { decryptData, encryptData, isEncryptedData } from '@/src/utils/cryptoStorage';
 
 type AuthState = {
   user: AuthUser | null;
@@ -19,10 +20,22 @@ type AuthState = {
 
 async function persistSession(session: AuthSession | null) {
   if (session) {
-    await AsyncStorage.setItem(STORAGE_KEYS.authSession, JSON.stringify(session));
+    const encryptedSession = encryptData(session);
+
+    console.log('Sessão criptografada salva no AsyncStorage:', encryptedSession);
+
+    await AsyncStorage.setItem(STORAGE_KEYS.authSession, encryptedSession);
   } else {
     await AsyncStorage.removeItem(STORAGE_KEYS.authSession);
   }
+}
+
+function readSession(raw: string): AuthSession {
+  if (isEncryptedData(raw)) {
+    return decryptData<AuthSession>(raw);
+  }
+
+  return JSON.parse(raw) as AuthSession;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -35,10 +48,19 @@ export const useAuthStore = create<AuthState>((set) => ({
   hydrate: async () => {
     try {
       const raw = await AsyncStorage.getItem(STORAGE_KEYS.authSession);
+
       if (raw) {
-        const session = JSON.parse(raw) as AuthSession;
+        const session = readSession(raw);
+
+        if (!isEncryptedData(raw)) {
+          await persistSession(session);
+        }
+
         set({ user: session.user, token: session.token });
       }
+    } catch {
+      await persistSession(null);
+      set({ user: null, token: null });
     } finally {
       set({ hydrated: true });
     }
@@ -46,36 +68,45 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   login: async (email, password) => {
     set({ loading: true, error: null });
+
     try {
       const session = await authService.login({ email, password });
+
       await persistSession(session);
+
       set({ user: session.user, token: session.token, loading: false });
     } catch (e) {
       set({
         loading: false,
         error: e instanceof Error ? e.message : 'Não foi possível entrar.',
       });
+
       throw e;
     }
   },
 
   register: async (email, password) => {
     set({ loading: true, error: null });
+
     try {
       const session = await authService.register({ email, password });
+
       await persistSession(session);
+
       set({ user: session.user, token: session.token, loading: false });
     } catch (e) {
       set({
         loading: false,
         error: e instanceof Error ? e.message : 'Não foi possível criar a conta.',
       });
+
       throw e;
     }
   },
 
   logout: async () => {
     await persistSession(null);
+
     set({ user: null, token: null, error: null });
   },
 
