@@ -27,7 +27,7 @@ export default function TabLayout() {
           headerTitle: 'OrbitaAlerta',
           tabBarIcon: ({ color }) => (
             <SymbolView
-              name={{ ios: 'gauge.with.dots.needle.67percent', android: 'dashboard', web: 'dashboard' }}
+              name="gauge.with.dots.needle.67percent"
               tintColor={color}
               size={24}
             />
@@ -40,7 +40,7 @@ export default function TabLayout() {
           title: 'Alertas',
           tabBarIcon: ({ color }) => (
             <SymbolView
-              name={{ ios: 'flame.fill', android: 'local_fire_department', web: 'local_fire_department' }}
+              name="flame.fill"
               tintColor={color}
               size={24}
             />
@@ -53,7 +53,7 @@ export default function TabLayout() {
           title: 'Mapa',
           tabBarIcon: ({ color }) => (
             <SymbolView
-              name={{ ios: 'map.fill', android: 'map', web: 'map' }}
+              name="map.fill"
               tintColor={color}
               size={24}
             />
@@ -66,7 +66,7 @@ export default function TabLayout() {
           title: 'Sync',
           tabBarIcon: ({ color }) => (
             <SymbolView
-              name={{ ios: 'arrow.triangle.2.circlepath', android: 'sync', web: 'sync' }}
+              name="arrow.triangle.2.circlepath"
               tintColor={color}
               size={24}
             />
