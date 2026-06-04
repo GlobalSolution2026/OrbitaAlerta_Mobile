@@ -1,6 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native';
-import Colors, { priorityColors } from '@/constants/Colors';
-import { useColorScheme } from '@/components/useColorScheme';
+import { priorityColors } from '@/constants/Colors';
 import type { PriorityLevel } from '@/src/types';
 import { priorityLabel } from '@/src/utils/format';
 import { radius, spacing, typography } from '@/src/theme/styles';
@@ -11,12 +10,12 @@ type Props = {
 };
 
 export function PriorityBadge({ level, score }: Props) {
-  const scheme = useColorScheme() ?? 'light';
-  const bg = priorityColors[level] ?? Colors[scheme].primary;
+  const bg = priorityColors[level] ?? '#FF6B35';
 
   return (
-    <View style={[styles.badge, { backgroundColor: bg }]}>
-      <Text style={styles.text}>
+    <View style={styles.wrapper}>
+      <View style={[styles.dot, { backgroundColor: bg }]} />
+      <Text style={[styles.text, { color: bg }]}>
         {priorityLabel(level)}
         {score != null ? ` · ${score}` : ''}
       </Text>
@@ -25,15 +24,19 @@ export function PriorityBadge({ level, score }: Props) {
 }
 
 const styles = StyleSheet.create({
-  badge: {
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xs,
-    borderRadius: radius.sm,
-    alignSelf: 'flex-start',
+  wrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+  },
+  dot: {
+    width: 7,
+    height: 7,
+    borderRadius: radius.full,
   },
   text: {
     ...typography.caption,
-    color: '#FFF',
     fontWeight: '700',
+    letterSpacing: 0.3,
   },
 });

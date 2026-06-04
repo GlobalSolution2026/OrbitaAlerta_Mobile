@@ -17,8 +17,25 @@ export default function TabLayout() {
         tabBarStyle: {
           backgroundColor: Colors[colorScheme].card,
           borderTopColor: Colors[colorScheme].border,
+          borderTopWidth: 1,
+          paddingTop: Platform.OS === 'ios' ? 4 : 0,
+          height: Platform.OS === 'ios' ? 88 : 60,
+        },
+        tabBarLabelStyle: {
+          fontSize: 11,
+          fontWeight: '600',
+          letterSpacing: 0.2,
+          marginTop: -2,
         },
         headerShown: useClientOnlyValue(false, true),
+        headerStyle: {
+          backgroundColor: Colors[colorScheme].card,
+        },
+        headerTintColor: Colors[colorScheme].text,
+        headerTitleStyle: {
+          fontWeight: '700',
+          fontSize: 18,
+        },
       }}>
       <Tabs.Screen
         name="index"
@@ -29,7 +46,7 @@ export default function TabLayout() {
             <SymbolView
               name="gauge.with.dots.needle.67percent"
               tintColor={color}
-              size={24}
+              size={22}
             />
           ),
         }}
@@ -42,7 +59,7 @@ export default function TabLayout() {
             <SymbolView
               name="flame.fill"
               tintColor={color}
-              size={24}
+              size={22}
             />
           ),
         }}
@@ -55,7 +72,7 @@ export default function TabLayout() {
             <SymbolView
               name="map.fill"
               tintColor={color}
-              size={24}
+              size={22}
             />
           ),
         }}
@@ -68,7 +85,7 @@ export default function TabLayout() {
             <SymbolView
               name="arrow.triangle.2.circlepath"
               tintColor={color}
-              size={24}
+              size={22}
             />
           ),
         }}

@@ -7,6 +7,7 @@ import {
   View,
 } from 'react-native';
 import { useRouter } from 'expo-router';
+import { SymbolView } from 'expo-symbols';
 import Colors from '@/constants/Colors';
 import { AuthScreenLayout } from '@/components/AuthScreenLayout';
 import { AuthTextInput } from '@/components/AuthTextInput';
@@ -14,7 +15,7 @@ import { useColorScheme } from '@/components/useColorScheme';
 import { useAuthStore } from '@/src/store/authStore';
 import { ROUTES } from '@/src/utils/routes';
 import { isValidEmail, isValidPassword } from '@/src/utils/validation';
-import { radius, spacing, typography } from '@/src/theme/styles';
+import { radius, shadow, spacing, typography } from '@/src/theme/styles';
 
 export default function RegisterScreen() {
   const router = useRouter();
@@ -69,19 +70,25 @@ export default function RegisterScreen() {
       />
 
       {error ? (
-        <Text style={[typography.caption, { color: colors.danger, marginBottom: spacing.md }]}>
-          {error}
-        </Text>
+        <View style={[styles.errorBox, { backgroundColor: colors.danger + '10', borderColor: colors.danger + '20' }]}>
+          <SymbolView name="exclamationmark.circle.fill" tintColor={colors.danger} size={14} />
+          <Text style={[typography.caption, { color: colors.danger, marginLeft: spacing.sm, flex: 1 }]}>
+            {error}
+          </Text>
+        </View>
       ) : null}
 
       <Pressable
         onPress={handleRegister}
         disabled={loading}
-        style={[styles.button, { backgroundColor: colors.primary, opacity: loading ? 0.7 : 1 }]}>
+        style={[styles.button, { backgroundColor: colors.primary, opacity: loading ? 0.7 : 1 }, shadow(colors.shadow)]}>
         {loading ? (
-          <ActivityIndicator color="#FFF" />
+          <ActivityIndicator color="#FFF" size="small" />
         ) : (
-          <Text style={styles.buttonText}>Cadastrar</Text>
+          <>
+            <SymbolView name="person.badge.plus" tintColor="#FFF" size={16} />
+            <Text style={[styles.buttonText, { marginLeft: spacing.sm }]}>Cadastrar</Text>
+          </>
         )}
       </Pressable>
 
@@ -101,8 +108,18 @@ const styles = StyleSheet.create({
     borderRadius: radius.md,
     alignItems: 'center',
     marginTop: spacing.sm,
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
   buttonText: { color: '#FFF', fontWeight: '700', fontSize: 16 },
+  errorBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: spacing.sm + 2,
+    borderRadius: radius.sm,
+    borderWidth: 1,
+    marginBottom: spacing.md,
+  },
   footer: {
     flexDirection: 'row',
     justifyContent: 'center',

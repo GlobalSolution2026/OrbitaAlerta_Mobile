@@ -13,13 +13,14 @@ import {
 import { Stack, useLocalSearchParams } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
 import * as Location from 'expo-location';
+import { SymbolView } from 'expo-symbols';
 import Colors from '@/constants/Colors';
 import { useColorScheme } from '@/components/useColorScheme';
 import { useNetworkStatus } from '@/src/hooks/useNetworkStatus';
 import { evidenceService } from '@/src/services/evidenceService';
 import { enqueueSyncItem } from '@/src/storage/offlineQueue';
 import { useSyncStore } from '@/src/store/syncStore';
-import { spacing, typography } from '@/src/theme/styles';
+import { radius, shadow, spacing, typography } from '@/src/theme/styles';
 
 export default function FieldOperationScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -94,58 +95,77 @@ export default function FieldOperationScreen() {
       <Stack.Screen options={{ title: 'Operação de campo' }} />
       <ScrollView style={{ flex: 1, backgroundColor: colors.background }}>
         <View style={styles.content}>
-          <Text style={[typography.body, { color: colors.textSecondary }]}>
-            Registre evidência fotográfica no local do alerta. Funciona sem sinal — os dados entram na fila de
-            sincronização.
-          </Text>
+          <View style={[styles.infoCard, { backgroundColor: colors.cardAlt, borderColor: colors.borderLight }]}>
+            <SymbolView name="info.circle.fill" tintColor={colors.accent} size={16} />
+            <Text style={[typography.bodySmall, { color: colors.textSecondary, marginLeft: spacing.sm, flex: 1 }]}>
+              Registre evidência fotográfica no local. Funciona sem sinal — os dados entram na fila de
+              sincronização.
+            </Text>
+          </View>
 
-          <Text style={[typography.label, { color: colors.textSecondary, marginTop: spacing.lg }]}>
-            Alerta: {id}
-          </Text>
+          <View style={[styles.fieldCard, { backgroundColor: colors.card, borderColor: colors.borderLight }, shadow(colors.shadow)]}>
+            <Text style={[typography.label, { color: colors.textMuted, marginBottom: spacing.sm }]}>
+              Alerta: {id}
+            </Text>
 
-          {photoUri ? (
-            <Image source={{ uri: photoUri }} style={styles.preview} />
-          ) : (
-            <View style={[styles.placeholder, { borderColor: colors.border, backgroundColor: colors.card }]}>
-              <Text style={{ color: colors.textSecondary }}>Nenhuma foto capturada</Text>
-            </View>
-          )}
-
-          <Pressable
-            onPress={capturePhoto}
-            style={[styles.button, { backgroundColor: colors.secondary, marginTop: spacing.md }]}>
-            <Text style={styles.buttonText}>Tirar foto</Text>
-          </Pressable>
-
-          <TextInput
-            style={[
-              styles.input,
-              { color: colors.text, borderColor: colors.border, backgroundColor: colors.card },
-            ]}
-            placeholder="Observações de campo (opcional)"
-            placeholderTextColor={colors.textSecondary}
-            value={notes}
-            onChangeText={setNotes}
-            multiline
-          />
-
-          <Pressable
-            onPress={submitEvidence}
-            disabled={submitting}
-            style={[styles.button, { backgroundColor: colors.primary, opacity: submitting ? 0.7 : 1 }]}>
-            {submitting ? (
-              <ActivityIndicator color="#FFF" />
+            {photoUri ? (
+              <Image source={{ uri: photoUri }} style={styles.preview} />
             ) : (
-              <Text style={styles.buttonText}>
-                {isOffline ? 'Salvar offline' : 'Enviar evidência'}
-              </Text>
+              <View style={[styles.placeholder, { borderColor: colors.borderLight, backgroundColor: colors.backgroundAlt }]}>
+                <SymbolView name="camera.fill" tintColor={colors.textMuted} size={32} />
+                <Text style={[typography.bodySmall, { color: colors.textMuted, marginTop: spacing.sm }]}>
+                  Nenhuma foto capturada
+                </Text>
+              </View>
             )}
-          </Pressable>
+
+            <Pressable
+              onPress={capturePhoto}
+              style={[styles.button, { backgroundColor: colors.secondary, marginTop: spacing.md }, shadow(colors.shadow)]}>
+              <SymbolView name="camera.fill" tintColor="#FFF" size={16} />
+              <Text style={[styles.buttonText, { marginLeft: spacing.sm }]}>Tirar foto</Text>
+            </Pressable>
+
+            <TextInput
+              style={[
+                styles.input,
+                {
+                  color: colors.text,
+                  borderColor: colors.borderLight,
+                  backgroundColor: colors.backgroundAlt,
+                },
+              ]}
+              placeholder="Observações de campo (opcional)"
+              placeholderTextColor={colors.textMuted}
+              value={notes}
+              onChangeText={setNotes}
+              multiline
+            />
+
+            <Pressable
+              onPress={submitEvidence}
+              disabled={submitting}
+              style={[styles.button, { backgroundColor: colors.primary, opacity: submitting ? 0.7 : 1, marginTop: 0 }, shadow(colors.shadow)]}>
+              {submitting ? (
+                <ActivityIndicator color="#FFF" size="small" />
+              ) : (
+                <>
+                  <SymbolView name={isOffline ? 'tray.fill' : 'paperplane.fill'} tintColor="#FFF" size={16} />
+                  <Text style={[styles.buttonText, { marginLeft: spacing.sm }]}>
+                    {isOffline ? 'Salvar offline' : 'Enviar evidência'}
+                  </Text>
+                </>
+              )}
+            </Pressable>
+          </View>
 
           {savedMessage && (
-            <Text style={[typography.body, { color: colors.success, marginTop: spacing.md, textAlign: 'center' }]}>
-              {savedMessage}
-            </Text>
+            <View style={[styles.successCard, { backgroundColor: colors.success + '10', borderColor: colors.success + '20' }]}>
+              <SymbolView name="checkmark.circle.fill" tintColor={colors.success} size={16} />
+              <Text style={[typography.bodySmall, { color: colors.success, marginLeft: spacing.sm, flex: 1 }]}>
+                {savedMessage}
+              </Text>
+            </View>
           )}
         </View>
       </ScrollView>
@@ -155,29 +175,51 @@ export default function FieldOperationScreen() {
 
 const styles = StyleSheet.create({
   content: { padding: spacing.md, paddingBottom: spacing.xl * 2 },
-  preview: { width: '100%', height: 220, borderRadius: 12, marginTop: spacing.md },
+  infoCard: {
+    flexDirection: 'row',
+    padding: spacing.md,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    marginBottom: spacing.md,
+  },
+  fieldCard: {
+    padding: spacing.lg,
+    borderRadius: radius.lg,
+    borderWidth: 1,
+  },
+  preview: { width: '100%', height: 220, borderRadius: radius.md, marginTop: spacing.sm },
   placeholder: {
-    height: 160,
-    borderRadius: 12,
+    height: 180,
+    borderRadius: radius.md,
     borderWidth: 1,
     borderStyle: 'dashed',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: spacing.md,
+    marginTop: spacing.sm,
   },
   button: {
     padding: spacing.md,
-    borderRadius: 10,
+    borderRadius: radius.md,
     alignItems: 'center',
-    marginTop: spacing.md,
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
   buttonText: { color: '#FFF', fontWeight: '700', fontSize: 16 },
   input: {
     marginTop: spacing.md,
     borderWidth: 1,
-    borderRadius: 10,
+    borderRadius: radius.md,
     padding: spacing.md,
     minHeight: 80,
     textAlignVertical: 'top',
+    marginBottom: spacing.md,
+  },
+  successCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: spacing.md,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    marginTop: spacing.md,
   },
 });

@@ -24,14 +24,14 @@ export function AuthTextInput({ label, error, style, ...props }: Props) {
         {label}
       </Text>
       <TextInput
-        placeholderTextColor={colors.textSecondary}
+        placeholderTextColor={colors.textMuted}
         autoCapitalize="none"
         style={[
           styles.input,
           {
             color: colors.text,
             backgroundColor: colors.card,
-            borderColor: error ? colors.danger : colors.border,
+            borderColor: error ? colors.danger : colors.borderLight,
           },
           style,
         ]}
@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: radius.md,
     paddingHorizontal: spacing.md,
-    paddingVertical: spacing.md,
+    paddingVertical: spacing.md + 2,
     fontSize: 16,
   },
 });
