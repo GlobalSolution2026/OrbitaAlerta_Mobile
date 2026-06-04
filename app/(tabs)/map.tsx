@@ -10,10 +10,10 @@ import { useAlertsStore } from '@/src/store/alertsStore';
 import { spacing } from '@/src/theme/styles';
 
 const DEFAULT_REGION = {
-  latitude: -21.17,
-  longitude: -47.81,
-  latitudeDelta: 1.2,
-  longitudeDelta: 1.2,
+  latitude: -14.0,
+  longitude: -55.0,
+  latitudeDelta: 30,
+  longitudeDelta: 30,
 };
 
 export default function MapScreen() {
