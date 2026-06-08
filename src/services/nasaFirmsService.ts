@@ -1,6 +1,6 @@
 import type { FireAlert, PriorityLevel } from '@/src/types';
 
-const NASA_API_KEY = '6374db90548f9fff5a26ebf995ebac5d';
+const NASA_API_KEY = process.env.EXPO_PUBLIC_NASA_API_KEY ?? '6374db90548f9fff5a26ebf995ebac5d';
 const FIRMS_BASE_URL = 'https://firms.modaps.eosdis.nasa.gov/api/area/csv';
 
 const BRAZIL_BBOX = {
@@ -119,9 +119,14 @@ export const nasaFirmsService = {
     if (cache && now - cache.timestamp < CACHE_TTL_MS) {
       return [...cache.alerts];
     }
-    const alerts = await fetchFromAPI();
-    cache = { alerts, timestamp: now };
-    return [...alerts];
+    try {
+      const alerts = await fetchFromAPI();
+      cache = { alerts, timestamp: now };
+      return [...alerts];
+    } catch {
+      console.warn('NASA FIRMS API indisponível, retornando dados vazios.');
+      return [];
+    }
   },
 
   invalidateCache(): void {

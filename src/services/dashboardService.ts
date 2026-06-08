@@ -1,8 +1,5 @@
-import { API_CONFIG } from '@/src/config/api';
-import { mockDashboard } from '@/src/mocks/dashboard';
 import { nasaFirmsService } from '@/src/services/nasaFirmsService';
 import type { DashboardSummary, FireAlert } from '@/src/types';
-import { delay } from '@/src/utils/delay';
 
 function computeDashboard(alerts: FireAlert[]): DashboardSummary {
   const active = alerts.filter((a) => a.status !== 'false_positive' && a.status !== 'resolved');
@@ -32,10 +29,6 @@ function computeDashboard(alerts: FireAlert[]): DashboardSummary {
 
 export const dashboardService = {
   async getSummary(): Promise<DashboardSummary> {
-    if (API_CONFIG.useMockData) {
-      await delay(350);
-      return { ...mockDashboard };
-    }
     const alerts = await nasaFirmsService.fetchAlerts();
     return computeDashboard(alerts);
   },
